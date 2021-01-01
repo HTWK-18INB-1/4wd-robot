@@ -1,0 +1,5 @@
+// Motor configuration
+#define MOTORS_RIGHT_DIRECTION 2
+#define MOTORS_RIGHT_SPEED 3
+#define MOTORS_LEFT_DIRECTION 4
+#define MOTORS_LEFT_SPEED 5

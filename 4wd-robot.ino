@@ -4,30 +4,23 @@
   2020 by Vivien Richter <vivien-richter@outlook.de>
   https://github.com/vivi90/4wd-robot
 */
-// Motor configuration
-#define MOTORS_RIGHT_FORWARD_PIN 2
-#define MOTORS_RIGHT_SPEED_PIN 3
-#define MOTORS_RIGHT_BACKWARD_PIN 4
-#define MOTORS_LEFT_FORWARD_PIN 5
-#define MOTORS_LEFT_SPEED_PIN 6
-#define MOTORS_LEFT_BACKWARD_PIN 7
 
+#include "config.hpp"
 #include "src/Drive/drive.hpp"
 
 Drive drive;
 
 // Initialization
 void setup() {
+    // Communication
+    Serial.begin(9600);
     // Motors
     drive.setup(
-        MOTORS_LEFT_FORWARD_PIN,
-        MOTORS_LEFT_BACKWARD_PIN,
-        MOTORS_LEFT_SPEED_PIN,
-        MOTORS_RIGHT_FORWARD_PIN,
-        MOTORS_RIGHT_BACKWARD_PIN,
-        MOTORS_RIGHT_SPEED_PIN
+        MOTORS_LEFT_DIRECTION,
+        MOTORS_LEFT_SPEED,
+        MOTORS_RIGHT_DIRECTION,
+        MOTORS_RIGHT_SPEED
     );
-    Serial.begin(9600);
 }
 
 // Main
