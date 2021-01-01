@@ -4,39 +4,59 @@
   2020 by Vivien Richter <vivien-richter@outlook.de>
   https://github.com/vivi90/4wd-robot
 */
-// Configuration
-#define MOTORS_RIGHT_DIRECTION 2
-#define MOTORS_RIGHT_SPEED 3
-#define MOTORS_LEFT_DIRECTION 4
-#define MOTORS_LEFT_SPEED 5
-#define SENSOR_MOTOR_BACK_RIGHT 6
-#define SENSOR_MOTOR_BACK_LEFT 7
-#define SENSOR_MOTOR_FRONT_RIGHT 8
-#define SENSOR_MOTOR_FRONT_LEFT 9
-#define SENSOR_MOTOR_STEPS_FULL_ROTATION 20
+// Motor configuration
+#define MOTORS_RIGHT_FORWARD_PIN 2
+#define MOTORS_RIGHT_SPEED_PIN 3
+#define MOTORS_RIGHT_BACKWARD_PIN 4
+#define MOTORS_LEFT_FORWARD_PIN 5
+#define MOTORS_LEFT_SPEED_PIN 6
+#define MOTORS_LEFT_BACKWARD_PIN 7
 
 #include "src/Drive/drive.hpp"
 
+Drive drive;
+
 // Initialization
 void setup() {
-    Drive.setup(
-        MOTORS_LEFT_DIRECTION,
-        MOTORS_LEFT_SPEED,
-        MOTORS_RIGHT_DIRECTION,
-        MOTORS_RIGHT_SPEED,
-        SENSOR_MOTOR_FRONT_LEFT,
-        SENSOR_MOTOR_FRONT_RIGHT,
-        SENSOR_MOTOR_BACK_LEFT,
-        SENSOR_MOTOR_BACK_RIGHT,
-        SENSOR_MOTOR_STEPS_FULL_ROTATION
+    // Motors
+    drive.setup(
+        MOTORS_LEFT_FORWARD_PIN,
+        MOTORS_LEFT_BACKWARD_PIN,
+        MOTORS_LEFT_SPEED_PIN,
+        MOTORS_RIGHT_FORWARD_PIN,
+        MOTORS_RIGHT_BACKWARD_PIN,
+        MOTORS_RIGHT_SPEED_PIN
     );
     Serial.begin(9600);
 }
 
 // Main
 void loop() {
-    Drive.test();
-    delay(1000);
-    Serial.println(Drive.getLastRotations());
-    delay(1000);
+    driveTest();
+}
+
+void driveTest() {
+    char command;
+    int speed = 0;
+    if (Serial.available()) {
+        command = Serial.read();
+        speed = Serial.parseInt();
+        switch (command) {
+            case 'f':
+                drive.forward(speed);
+                break;
+            case 'b':
+                drive.backward(speed);
+                break;
+            case 'l':
+                drive.rotateLeft(speed);
+                break;
+            case 'r':
+                drive.rotateRight(speed);
+                break;
+            case 's':
+                drive.stop();
+                break;
+        }
+    }
 }
