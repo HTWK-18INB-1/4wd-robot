@@ -3,3 +3,10 @@
 #define MOTORS_RIGHT_SPEED 3
 #define MOTORS_LEFT_DIRECTION 4
 #define MOTORS_LEFT_SPEED 5
+
+// Sonar configuration
+#define SENSOR_SONAR_ROTATION_PIN 10
+#define SENSOR_SONAR_TRIGGER_PIN 11
+#define SENSOR_SONAR_ECHO_PIN 12
+#define SENSOR_SONAR_ROTATION_SPEED 2 // 100ms/60°
+#define SOUND_SPEED 343 // In dry air at 20°C in m/s

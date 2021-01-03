@@ -7,8 +7,10 @@
 
 #include "config.hpp"
 #include "src/Drive/drive.hpp"
+#include "src/Sonar/sonar.hpp"
 
 Drive drive;
+Sonar sonar;
 
 // Initialization
 void setup() {
@@ -21,20 +23,29 @@ void setup() {
         MOTORS_RIGHT_DIRECTION,
         MOTORS_RIGHT_SPEED
     );
+    // Sonar
+    sonar.setup(
+        SENSOR_SONAR_ROTATION_PIN,
+        SENSOR_SONAR_TRIGGER_PIN,
+        SENSOR_SONAR_ECHO_PIN,
+        SENSOR_SONAR_ROTATION_SPEED,
+        SOUND_SPEED
+    );
 }
 
 // Main
 void loop() {
-    driveTest();
+    test();
 }
 
-void driveTest() {
+void test() {
     char command;
     int speed = 0;
     if (Serial.available()) {
         command = Serial.read();
         speed = Serial.parseInt();
         switch (command) {
+            // Drive
             case 'f':
                 drive.forward(speed);
                 break;
@@ -47,8 +58,12 @@ void driveTest() {
             case 'r':
                 drive.rotateRight(speed);
                 break;
-            case 's':
+            case 'h':
                 drive.stop();
+                break;
+            // Sonar
+            case 's':
+                sonar.scan();
                 break;
         }
     }
