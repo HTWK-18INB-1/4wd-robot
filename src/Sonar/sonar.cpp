@@ -1,24 +1,27 @@
 #include "sonar.hpp"
 
-void Sonar::setup(int rotationPin, int triggerPin, int echoPin, int rotationSpeed, int soundSpeed) {
+void Sonar::setup(int rotationPin, int triggerPin, int echoPin, int rotationSpeed, int rotationMin, int rotationMax, int soundSpeed) {
     this->rotationPin = rotationPin;
     this->triggerPin = triggerPin;
     this->echoPin = echoPin;
     this->rotationSpeed = rotationSpeed;
+    this->rotationMin = rotationMin;
+    this->rotationMax = rotationMax;
     this->soundSpeed = soundSpeed;
     pinMode(this->rotationPin, OUTPUT);
     pinMode(this->triggerPin, OUTPUT);
     pinMode(this->echoPin, INPUT);
     this->rotation = Servo();
-    this->rotation.attach(this->rotationPin);
+    this->rotation.attach(this->rotationPin, this->rotationMin, this->rotationMax);
+    this->rotation.write(90);
 }
 
 void Sonar::scan() {
-    for (int i = 160; i >= 20; i=i-10) {
+    for (int i = 180; i >= 0; i=i-10) {
         this->rotation.write(i);
         this->getDistance();
-        if (i == 160) {
-            delay(this->rotationSpeed * 140);
+        if (i == 180) {
+            delay(this->rotationSpeed * 180);
         } else {
             delay(this->rotationSpeed);
         }
