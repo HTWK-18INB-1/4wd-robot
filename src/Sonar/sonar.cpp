@@ -17,7 +17,7 @@ void Sonar::setup(int rotationPin, int triggerPin, int echoPin, int rotationSpee
 }
 
 void Sonar::scan() {
-    for (int i = 180; i >= 0; i=i-10) {
+    for (int i = 180; i >= 0; i = i - 10) {
         this->rotation.write(i);
         this->getDistance();
         if (i == 180) {
@@ -29,8 +29,8 @@ void Sonar::scan() {
 }
 
 int Sonar::getDistance() {
-    digitalWrite (this->triggerPin, HIGH);
+    digitalWrite(this->triggerPin, HIGH);
     delayMicroseconds(10); // Minimum pulse width
-    digitalWrite (this->triggerPin, LOW);
+    digitalWrite(this->triggerPin, LOW);
     return pulseIn(this->echoPin, HIGH) * this->soundSpeed / 2000;
 }
