@@ -1,8 +1,8 @@
 /*
-  4WD robot with sonar and optical position detection.
+  Car robot with sonar and bluetooth.
 
   2020 by Vivien Richter <vivien-richter@outlook.de>
-  https://github.com/vivi90/4wd-robot
+  https://github.com/HTWK-18INB-1/asuka.git
 */
 
 #include "config.hpp"
