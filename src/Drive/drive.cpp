@@ -59,6 +59,7 @@ void DriveClass::stop() {
     digitalWrite(rightMotorSpeedPin, HIGH);
     digitalWrite(leftMotorDirectionPin, HIGH);
     digitalWrite(rightMotorDirectionPin, HIGH);
+    this->resetDistance();
 }
 
 unsigned long DriveClass::getDistance() {

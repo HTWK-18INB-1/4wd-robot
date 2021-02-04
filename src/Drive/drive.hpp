@@ -3,7 +3,7 @@
 /**
  * Drive class
  *
- * @version 1.0.0
+ * @version 1.0.1
  * @author Vivien Richter <vivien-richter@outlook.de>
  */
 class DriveClass {
@@ -56,16 +56,13 @@ class DriveClass {
         void stop();
 
         /**
-         * Returns already driven distance
+         * Returns currently already driven distance
+         *
+         * Only available while driving
          *
          * @return Distance in mm
          */
         unsigned long getDistance();
-
-        /**
-         * Resets the already driven distance counter
-         */
-        void resetDistance();
 
     private:
         /**
@@ -117,6 +114,11 @@ class DriveClass {
          * Right wheel sensor ticks
          */
         volatile static unsigned long rightMotorSensorTicks;
+
+        /**
+         * Resets the distance counter
+         */
+        void resetDistance();
 
         /**
          * Left wheel sensor ISR

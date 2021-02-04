@@ -52,7 +52,6 @@ void loop() {
                 Drive.forward(255);
                 while (Drive.getDistance() < value) {}
                 Drive.stop();
-                Drive.resetDistance();
                 break;
             // Drive test
             case 'f':
