@@ -1,8 +1,12 @@
 // Motor configuration
-#define MOTORS_RIGHT_DIRECTION 8
-#define MOTORS_RIGHT_SPEED 9
-#define MOTORS_LEFT_DIRECTION 10
-#define MOTORS_LEFT_SPEED 11
+#define MOTOR_RIGHT_DIRECTION 8
+#define MOTOR_RIGHT_SPEED 9
+#define MOTOR_RIGHT_SENSOR 2 // Right wheel sensor pin
+#define MOTOR_LEFT_DIRECTION 10
+#define MOTOR_LEFT_SPEED 11
+#define MOTOR_LEFT_SENSOR 3 // Left wheel sensor pin
+#define MOTOR_CYCLE_TICKS 20 // The number of ticks, thats required for one rotation
+#define WHEEL_DIAMETER 67 // in mm
 
 // Sonar configuration
 #define SONAR_ROTATION_PIN 6

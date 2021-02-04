@@ -9,7 +9,6 @@
 #include "src/Drive/drive.hpp"
 #include "src/Sonar/sonar.hpp"
 
-Drive drive;
 Sonar sonar;
 
 // Initialization
@@ -17,11 +16,15 @@ void setup() {
     // Communication
     Serial.begin(9600);
     // Motors
-    drive.setup(
-        MOTORS_LEFT_DIRECTION,
-        MOTORS_LEFT_SPEED,
-        MOTORS_RIGHT_DIRECTION,
-        MOTORS_RIGHT_SPEED
+    Drive.setup(
+        MOTOR_LEFT_DIRECTION,
+        MOTOR_LEFT_SPEED,
+        MOTOR_LEFT_SENSOR,
+        MOTOR_RIGHT_DIRECTION,
+        MOTOR_RIGHT_SPEED,
+        MOTOR_RIGHT_SENSOR,
+        MOTOR_CYCLE_TICKS,
+        WHEEL_DIAMETER
     );
     // Sonar
     sonar.setup(
@@ -40,31 +43,34 @@ void setup() {
 
 // Main
 void loop() {
-    test();
-}
-
-void test() {
     if (Serial.available()) {
         char command = Serial.read();
-        int speed = Serial.parseInt();
+        int value = Serial.parseInt();
         switch (command) {
-            // Drive
+            // Logic tests
+            case 'x':
+                Drive.forward(255);
+                while (Drive.getDistance() < value) {}
+                Drive.stop();
+                Drive.resetDistance();
+                break;
+            // Drive test
             case 'f':
-                drive.forward(speed);
+                Drive.forward(value);
                 break;
             case 'b':
-                drive.backward(speed);
+                Drive.backward(value);
                 break;
             case 'l':
-                drive.rotateLeft(speed);
+                Drive.rotateLeft(value);
                 break;
             case 'r':
-                drive.rotateRight(speed);
+                Drive.rotateRight(value);
                 break;
             case 'h':
-                drive.stop();
+                Drive.stop();
                 break;
-            // Sonar
+            // Sonar test
             case 's':
                 int distances[181];
                 sonar.scan(distances);

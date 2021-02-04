@@ -1,49 +1,86 @@
 #include "drive.hpp"
 
-void Drive::setup(int leftMotorsDirectionPin, int leftMotorsSpeedPin, int rightMotorsDirectionPin, int rightMotorsSpeedPin) {
-    // Left motor controls
-    this->leftMotorsDirectionPin = leftMotorsDirectionPin;
-    pinMode(leftMotorsDirectionPin, OUTPUT);
-    this->leftMotorsSpeedPin = leftMotorsSpeedPin;
-    pinMode(leftMotorsSpeedPin, OUTPUT);
-    // Right motor controls
-    this->rightMotorsDirectionPin = rightMotorsDirectionPin;
-    pinMode(rightMotorsDirectionPin, OUTPUT);
-    this->rightMotorsSpeedPin = rightMotorsSpeedPin;
-    pinMode(rightMotorsSpeedPin, OUTPUT);
+volatile unsigned long DriveClass::leftMotorSensorTicks = 0;
+
+volatile unsigned long DriveClass::rightMotorSensorTicks = 0;
+
+void DriveClass::setup(int leftMotorDirectionPin, int leftMotorSpeedPin, int leftMotorSensorPin, int rightMotorDirectionPin, int rightMotorSpeedPin, int rightMotorSensorPin, int motorCycleTicks, int wheelDiameter) {
+    // General
+    this->motorCycleTicks = motorCycleTicks;
+    this->wheelCircumferencePerTick = wheelDiameter * PI / this->motorCycleTicks;
+    // Left motor
+    this->leftMotorDirectionPin = leftMotorDirectionPin;
+    pinMode(this->leftMotorDirectionPin, OUTPUT);
+    this->leftMotorSpeedPin = leftMotorSpeedPin;
+    pinMode(this->leftMotorSpeedPin, OUTPUT);
+    this->leftMotorSensorPin = leftMotorSensorPin;
+    pinMode(this->leftMotorSensorPin, INPUT);
+    attachInterrupt(digitalPinToInterrupt(this->leftMotorSensorPin), DriveClass::leftMotorSensorISR, FALLING);
+    // Right motor
+    this->rightMotorDirectionPin = rightMotorDirectionPin;
+    pinMode(this->rightMotorDirectionPin, OUTPUT);
+    this->rightMotorSpeedPin = rightMotorSpeedPin;
+    pinMode(this->rightMotorSpeedPin, OUTPUT);
+    this->rightMotorSensorPin = rightMotorSensorPin;
+    pinMode(this->rightMotorSensorPin, INPUT);
+    attachInterrupt(digitalPinToInterrupt(this->rightMotorSensorPin), DriveClass::rightMotorSensorISR, FALLING);
 }
 
-void Drive::forward(int speed) {
-    analogWrite(leftMotorsSpeedPin, 255 - speed);
-    analogWrite(rightMotorsSpeedPin, 255 - speed);
-    digitalWrite(leftMotorsDirectionPin, HIGH);
-    digitalWrite(rightMotorsDirectionPin, HIGH);
+void DriveClass::forward(int speed) {
+    analogWrite(leftMotorSpeedPin, 255 - speed);
+    analogWrite(rightMotorSpeedPin, 255 - speed);
+    digitalWrite(leftMotorDirectionPin, HIGH);
+    digitalWrite(rightMotorDirectionPin, HIGH);
 }
 
-void Drive::backward(int speed) {
-    analogWrite(leftMotorsSpeedPin, speed);
-    analogWrite(rightMotorsSpeedPin, speed);
-    digitalWrite(leftMotorsDirectionPin, LOW);
-    digitalWrite(rightMotorsDirectionPin, LOW);
+void DriveClass::backward(int speed) {
+    analogWrite(leftMotorSpeedPin, speed);
+    analogWrite(rightMotorSpeedPin, speed);
+    digitalWrite(leftMotorDirectionPin, LOW);
+    digitalWrite(rightMotorDirectionPin, LOW);
 }
 
-void Drive::rotateLeft(int speed) {
-    analogWrite(leftMotorsSpeedPin, speed);
-    analogWrite(rightMotorsSpeedPin, 255 - speed);
-    digitalWrite(leftMotorsDirectionPin, LOW);
-    digitalWrite(rightMotorsDirectionPin, HIGH);
+void DriveClass::rotateLeft(int speed) {
+    analogWrite(leftMotorSpeedPin, speed);
+    analogWrite(rightMotorSpeedPin, 255 - speed);
+    digitalWrite(leftMotorDirectionPin, LOW);
+    digitalWrite(rightMotorDirectionPin, HIGH);
 }
 
-void Drive::rotateRight(int speed) {
-    analogWrite(leftMotorsSpeedPin, 255 - speed);
-    analogWrite(rightMotorsSpeedPin, speed);
-    digitalWrite(leftMotorsDirectionPin, HIGH);
-    digitalWrite(rightMotorsDirectionPin, LOW);
+void DriveClass::rotateRight(int speed) {
+    analogWrite(leftMotorSpeedPin, 255 - speed);
+    analogWrite(rightMotorSpeedPin, speed);
+    digitalWrite(leftMotorDirectionPin, HIGH);
+    digitalWrite(rightMotorDirectionPin, LOW);
 }
 
-void Drive::stop() {
-    digitalWrite(leftMotorsSpeedPin, HIGH);
-    digitalWrite(rightMotorsSpeedPin, HIGH);
-    digitalWrite(leftMotorsDirectionPin, HIGH);
-    digitalWrite(rightMotorsDirectionPin, HIGH);
+void DriveClass::stop() {
+    digitalWrite(leftMotorSpeedPin, HIGH);
+    digitalWrite(rightMotorSpeedPin, HIGH);
+    digitalWrite(leftMotorDirectionPin, HIGH);
+    digitalWrite(rightMotorDirectionPin, HIGH);
 }
+
+unsigned long DriveClass::getDistance() {
+    return (DriveClass::leftMotorSensorTicks + DriveClass::rightMotorSensorTicks) / 2 * this->wheelCircumferencePerTick;
+}
+
+void DriveClass::resetDistance() {
+    DriveClass::leftMotorSensorTicks = 0;
+    DriveClass::rightMotorSensorTicks = 0;
+}
+
+static void DriveClass::leftMotorSensorISR() {
+    noInterrupts(); // Disable interrupt support
+    DriveClass::leftMotorSensorTicks++;
+    interrupts(); // Enable interrupt support
+}
+
+static void DriveClass::rightMotorSensorISR() {
+    noInterrupts(); // Disable interrupt support
+    DriveClass::rightMotorSensorTicks++;
+    interrupts(); // Enable interrupt support
+}
+
+// Creates an instance
+DriveClass Drive;
