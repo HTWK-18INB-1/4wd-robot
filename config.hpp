@@ -1,8 +1,8 @@
 // Motor configuration
-#define MOTORS_RIGHT_DIRECTION 2
-#define MOTORS_RIGHT_SPEED 3
-#define MOTORS_LEFT_DIRECTION 4
-#define MOTORS_LEFT_SPEED 5
+#define MOTORS_RIGHT_DIRECTION 8
+#define MOTORS_RIGHT_SPEED 9
+#define MOTORS_LEFT_DIRECTION 10
+#define MOTORS_LEFT_SPEED 11
 
 // Sonar configuration
 #define SONAR_ROTATION_PIN 6
