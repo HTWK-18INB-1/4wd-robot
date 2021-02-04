@@ -25,12 +25,15 @@ void setup() {
     );
     // Sonar
     sonar.setup(
-        SENSOR_SONAR_ROTATION_PIN,
-        SENSOR_SONAR_TRIGGER_PIN,
-        SENSOR_SONAR_ECHO_PIN,
-        SENSOR_SONAR_ROTATION_SPEED,
-        SENSOR_SONAR_ROTATION_MIN,
-        SENSOR_SONAR_ROTATION_MAX,
+        SONAR_ROTATION_PIN,
+        SONAR_TRIGGER_PIN,
+        SONAR_ECHO_PIN,
+        SONAR_TRIGGER_WIDTH,
+        SONAR_ROTATION_MIN,
+        SONAR_ROTATION_HALF,
+        SONAR_ROTATION_MAX,
+        SONAR_ROTATION_DELAY,
+        SONAR_ROTATION_DELAY_MAX,
         SOUND_SPEED
     );
 }
@@ -41,11 +44,9 @@ void loop() {
 }
 
 void test() {
-    char command;
-    int speed = 0;
     if (Serial.available()) {
-        command = Serial.read();
-        speed = Serial.parseInt();
+        char command = Serial.read();
+        int speed = Serial.parseInt();
         switch (command) {
             // Drive
             case 'f':
@@ -65,7 +66,11 @@ void test() {
                 break;
             // Sonar
             case 's':
-                sonar.scan();
+                int distances[181];
+                sonar.scan(distances);
+                for (int i = 0; i <= 180; i++) {
+                    Serial.println(String(i) + ": " + String(distances[i]));
+                }
                 break;
         }
     }

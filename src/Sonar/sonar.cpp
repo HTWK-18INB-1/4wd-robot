@@ -1,36 +1,71 @@
 #include "sonar.hpp"
 
-void Sonar::setup(int rotationPin, int triggerPin, int echoPin, int rotationSpeed, int rotationMin, int rotationMax, int soundSpeed) {
+void Sonar::setup(int rotationPin, int triggerPin, int echoPin, int triggerWidth, int rotationMin, int rotationHalf, int rotationMax, int rotationDelay, int rotationDelayMax, int soundSpeed) {
+    // Servo
     this->rotationPin = rotationPin;
+    this->rotationMin = rotationMin;
+    this->rotationHalf = rotationHalf;
+    this->rotationMax = rotationMax;
+    this->rotationDelay = rotationDelay;
+    this->rotationDelayMax = rotationDelayMax;
+    pinMode(this->rotationPin, OUTPUT);
+    this->servo = Servo();
+    this->servo.attach(this->rotationPin, this->rotationMin, this->rotationMax);
+    this->rotate(90);
+    // Sonar
     this->triggerPin = triggerPin;
     this->echoPin = echoPin;
-    this->rotationSpeed = rotationSpeed;
-    this->rotationMin = rotationMin;
-    this->rotationMax = rotationMax;
+    this->triggerWidth = triggerWidth;
     this->soundSpeed = soundSpeed;
-    pinMode(this->rotationPin, OUTPUT);
     pinMode(this->triggerPin, OUTPUT);
     pinMode(this->echoPin, INPUT);
-    this->rotation = Servo();
-    this->rotation.attach(this->rotationPin, this->rotationMin, this->rotationMax);
-    this->rotation.write(90);
 }
 
-void Sonar::scan() {
-    for (int i = 180; i >= 0; i = i - 10) {
-        this->rotation.write(i);
-        this->getDistance();
-        if (i == 180) {
-            delay(this->rotationSpeed * 180);
-        } else {
-            delay(this->rotationSpeed);
-        }
+void Sonar::scan(int *distances) {
+    // Scanning
+    for (int i = 0; i <= 180; i++) {
+        // Rotates sonar
+        this->rotate(i);
+        // Gets the distance
+        distances[i] = this->getDistance();
     }
+    // Returns
+    return;
 }
 
 int Sonar::getDistance() {
     digitalWrite(this->triggerPin, HIGH);
-    delayMicroseconds(10); // Minimum pulse width
+    delayMicroseconds(this->triggerWidth);
     digitalWrite(this->triggerPin, LOW);
-    return pulseIn(this->echoPin, HIGH) * this->soundSpeed / 2000;
+    return pulseIn(this->echoPin, HIGH) * this->soundSpeed / 2 / 1000;
+}
+
+void Sonar::rotate(int angle) {
+    // Sets the new angle
+    switch (angle) {
+        case 0:
+            this->servo.writeMicroseconds(this->rotationMin);
+            break;
+        case 1 ... 89:
+            this->servo.writeMicroseconds((this->rotationHalf - this->rotationMin) / 90 * angle + this->rotationMin);
+            break;
+        case 90:
+            this->servo.writeMicroseconds(this->rotationHalf);
+            break;
+        case 91 ... 179:
+            this->servo.writeMicroseconds((this->rotationMax - this->rotationHalf) / 90 * (angle - 90) + this->rotationHalf);
+            break;
+        case 180:
+            this->servo.writeMicroseconds(this->rotationMax);
+            break;
+    }
+    // Waiting for the servo to be finish
+    int servoDelay = abs(this->lastAngle - angle) * this->rotationDelay;
+    if (servoDelay > this->rotationDelayMax) {
+        servoDelay = this->rotationDelayMax;
+    }
+    delay(servoDelay);
+    // Updates last angle
+    this->lastAngle = angle;
+    return;
 }

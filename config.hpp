@@ -5,10 +5,13 @@
 #define MOTORS_LEFT_SPEED 5
 
 // Sonar configuration
-#define SENSOR_SONAR_ROTATION_PIN 10
-#define SENSOR_SONAR_TRIGGER_PIN 11
-#define SENSOR_SONAR_ECHO_PIN 12
-#define SENSOR_SONAR_ROTATION_SPEED 2 // 100ms/60°
-#define SENSOR_SONAR_ROTATION_MIN 410 //400
-#define SENSOR_SONAR_ROTATION_MAX 2450 //2444
-#define SOUND_SPEED 343 // In dry air at 20°C in m/s
+#define SONAR_ROTATION_PIN 6
+#define SONAR_TRIGGER_PIN 5
+#define SONAR_ECHO_PIN 4
+#define SONAR_TRIGGER_WIDTH 10 // Minimum trigger pulse width (in microseconds)
+#define SONAR_ROTATION_MIN 520 // Pulse width for 0°
+#define SONAR_ROTATION_HALF 1400 // Pulse width for 90°
+#define SONAR_ROTATION_MAX 2440 // Pulse width for 180°
+#define SONAR_ROTATION_DELAY 20 // delay in ms/°
+#define SONAR_ROTATION_DELAY_MAX 300 // maximum delay in ms
+#define SOUND_SPEED 344 // In dry air at 20°C in m/s
