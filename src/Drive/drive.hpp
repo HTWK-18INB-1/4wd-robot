@@ -3,11 +3,20 @@
 /**
  * Drive class
  *
- * @version 1.0.1
+ * @version 1.1.0
  * @author Vivien Richter <vivien-richter@outlook.de>
  */
 class DriveClass {
     public:
+        /**
+         * Driving directions
+         */
+        static const int DRIVING_STOP = 0;
+        static const int DRIVING_FORWARD = 1;
+        static const int DRIVING_BACKWARD = 2;
+        static const int DRIVING_ROTATION_LEFT = 3;
+        static const int DRIVING_ROTATION_RIGHT = 4;
+
         /**
          * Constructor
          *
@@ -56,6 +65,13 @@ class DriveClass {
         void stop();
 
         /**
+         * Returns current driving direction
+         *
+         * @return Returns 0 = stop, 1 = forward, 2 = backward, 3 = left rotation or 4 = right rotation
+         */
+        int getCurrentDirection();
+
+        /**
          * Returns currently already driven distance
          *
          * Only available while driving
@@ -63,6 +79,8 @@ class DriveClass {
          * @return Distance in mm
          */
         unsigned long getDistance();
+
+        volatile static int dump[5];
 
     private:
         /**
@@ -73,7 +91,7 @@ class DriveClass {
         /**
          * Speed pin of the left motor
          */
-        int leftMotorSpeedPin;
+        volatile static int  leftMotorSpeedPin;
 
         /**
          * Sensor pin of the left motor
@@ -88,7 +106,7 @@ class DriveClass {
         /**
          * Speed pin of the left motor
          */
-        int rightMotorSpeedPin;
+        volatile static int rightMotorSpeedPin;
 
         /**
          * Sensor pin of the right motor
@@ -106,19 +124,34 @@ class DriveClass {
         int wheelCircumferencePerTick;
 
         /**
+         * Current driving direction
+         */
+        volatile static int drivingDirection;
+
+        /**
+         * Current base speed
+         */
+        volatile static int baseSpeed;
+
+        /**
          * Left wheel sensor ticks
          */
-        volatile static unsigned long leftMotorSensorTicks;
+        volatile static int leftMotorSensorTicks;
 
         /**
          * Right wheel sensor ticks
          */
-        volatile static unsigned long rightMotorSensorTicks;
+        volatile static int rightMotorSensorTicks;
 
         /**
          * Resets the distance counter
          */
         void resetDistance();
+
+        /**
+         * Adjusts the engine speeds while driving
+         */
+        static void adjustSpeed();
 
         /**
          * Left wheel sensor ISR

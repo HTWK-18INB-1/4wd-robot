@@ -50,7 +50,14 @@ void loop() {
             // Logic tests
             case 'x':
                 Drive.forward(255);
-                while (Drive.getDistance() < value) {}
+                while (Drive.getDistance() < value) {
+                    Serial.println(DriveClass::dump[0]);
+                    Serial.println(DriveClass::dump[1]);
+                    Serial.println(DriveClass::dump[2]);
+                    Serial.println(DriveClass::dump[3]);
+                    Serial.println(DriveClass::dump[4]);
+                    Serial.println("-----");
+                }
                 Drive.stop();
                 break;
             // Drive test
