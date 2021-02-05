@@ -1,6 +1,8 @@
 # Asuka Project
 Robot car (2WD or 4WD) with sonar and bluetooth.
 
+_![Picture](image.png)_
+
 ## Features
  - Odometry controlled driving
  - 180° Sonar sensor
